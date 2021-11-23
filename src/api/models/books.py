@@ -1,6 +1,6 @@
 from api.utils.database import db
-from marshmallow_sqlalchemy import ModelSchema
-from marshmallow import fields
+from marshmallow import Schema, fields
+
 
 class Book(db.Model):
     __tablename__ = 'books'
@@ -20,16 +20,17 @@ class Book(db.Model):
         db.session.commit()
         return self
 
-class BookSchema(ModelSchema):
-    class Meta(ModelSchema.Meta):
+
+class BookSchema(Schema):
+    class Meta:
         model = Book
         sqla_session = db.session
 
-    id = fields.Numbers(dump_only=True)
+    id = fields.Integer(dump_only=True)
     title = fields.String(required=True)
     year = fields.Integer(required=True)
     author_id = fields.Integer()
 
-    
+
 
     
