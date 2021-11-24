@@ -19,8 +19,13 @@ def create_author():
             data = author_schema.load(json_data)
         except Exception as e:
             print(e)
-            return {"message": "Validation Error occurred."}, 400
-        author = Author(first_name=data["first_name"], last_name=data["last_name"])
+            return {"message": "validation error occurred."}, 400
+        
+        first_name = data["first_name"]
+        last_name = data["last_name"]
+        books = data["books"] if data.get("books") else []
+
+        author = Author(first_name=first_name, last_name=last_name, books=books)
         result = author_schema.dump(author.create())
         return response_with(resp.SUCCESS_201, value={"author": result})
     except Exception as e:
@@ -42,4 +47,42 @@ def get_author_detail(author_id):
     author_schema = AuthorSchema()
     author = author_schema.dump(fetched)
     return response_with(resp.SUCCESS_200, value={"author": author})
+
+
+@author_routes.route('/<int:id>', methods=['PUT'])
+def update_author_detail(id):
+    data = request.get_json()
+    get_author = Author.query.get_or_404(id)
+    get_author.first_name = data['first_name']
+    get_author.last_name = data['last_name']
+    db.session.add(get_author)
+    db.session.commit()
+    author_schema = AuthorSchema()
+    author = author_schema.dump(get_author)
+    return response_with(resp.SUCCESS_200, value={"author": author})
+
+
+@author_routes.route('/<int:id>', methods=['PATCH'])
+def modify_author_detail(id):
+    data = request.get_json()
+    get_author = Author.query.get(id)
+    if data.get('first_name'):
+        get_author.first_name = data['first_name']
+    if data.get('last_name'):
+        get_author.last_name = data['last_name']
+    db.session.add(get_author)
+    db.session.commit()
+    author_schema = AuthorSchema()
+    author = author_schema.dump(get_author)
+    return response_with(resp.SUCCESS_200, value={"author": author})
+
+
+@author_routes.route('/<int:id>', methods=['DELETE'])
+def delete_author(id):
+    get_author = Author.query.get_or_404(id)
+    db.session.delete(get_author)
+    db.session.commit()
+    return response_with(resp.SUCCESS_204)
+
+
 

@@ -1,7 +1,6 @@
 from api.utils.database import db
 from marshmallow import Schema, fields
 
-
 class Book(db.Model):
     __tablename__ = 'books'
 
