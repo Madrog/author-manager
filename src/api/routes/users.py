@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.users import User, UserSchema
@@ -10,11 +11,12 @@ user_routes = Blueprint('user_routes', __name__)
 @user_routes.route('/', methods=['POST'])
 def create_user():
     try:
-        data = request.get_json()
-        data['password'] = User.generate_hash(data['password'])
+        json_data = request.get_json()
+        json_data['password'] = User.generate_hash(json_data['password'])
         user_schema = UserSchema()
-        user = user_schema.load(data)
-        result = user_schema.dump(user.create()).data
+        data = user_schema.load(json_data)
+        user = User(username=data['username'], password=data['password'])
+        result = user_schema.dump(user.create())
         return response_with(resp.SUCCESS_201)
     except Exception as e:
         print(e)

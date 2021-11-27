@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask import request
+from flask_jwt_extended import jwt_required
 from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.authors import Author, AuthorSchema
@@ -24,7 +25,6 @@ def create_author():
         first_name = data["first_name"]
         last_name = data["last_name"]
         books = data["books"] if data.get("books") else []
-
         author = Author(first_name=first_name, last_name=last_name, books=books)
         result = author_schema.dump(author.create())
         return response_with(resp.SUCCESS_201, value={"author": result})

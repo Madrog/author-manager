@@ -36,17 +36,28 @@ SERVER_ERROR_404 = {
     "message": "Resource not found"
 }
 
-UNAUTHORIZED_403 = {
+FORBIDDEN_403 = {
     "http_code": 403,
     "code": "notAuthorized",
-    "message": "You are not authorized to execute files"
+    "message": "You are not authorised to execute this."
+}
+
+UNAUTHORIZED_401 = {
+    "http_code": 401,
+    "code": "notAuthorized",
+    "message": "Invalid authentication."
+}
+
+NOT_FOUND_HANDLER_404 = {
+    "http_code": 404,
+    "code": "notFound",
+    "message": "route not found"
 }
 
 SUCCESS_200 = {
     'http_code': 200,
     'code': 'success'
 }
-
 
 SUCCESS_201 = {
     'http_code': 201,

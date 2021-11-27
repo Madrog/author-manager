@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.books import Book, BookSchema
@@ -7,6 +8,7 @@ from api.utils.database import db
 book_routes = Blueprint("book_routes", __name__)
 
 @book_routes.route('/', methods=['POST'])
+@jwt_required
 def create_book():
     try:
         json_data = request.get_json()
