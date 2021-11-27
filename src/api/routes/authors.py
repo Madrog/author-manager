@@ -9,6 +9,7 @@ from api.utils.database import db
 author_routes = Blueprint("author_routes", __name__)
 
 @author_routes.route('/', methods=['POST'])
+@jwt_required()
 def create_author():
     try:
         json_data = request.get_json()
@@ -50,6 +51,7 @@ def get_author_detail(author_id):
 
 
 @author_routes.route('/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_author_detail(id):
     data = request.get_json()
     get_author = Author.query.get_or_404(id)
@@ -63,6 +65,7 @@ def update_author_detail(id):
 
 
 @author_routes.route('/<int:id>', methods=['PATCH'])
+@jwt_required()
 def modify_author_detail(id):
     data = request.get_json()
     get_author = Author.query.get(id)
@@ -78,6 +81,7 @@ def modify_author_detail(id):
 
 
 @author_routes.route('/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_author(id):
     get_author = Author.query.get_or_404(id)
     db.session.delete(get_author)

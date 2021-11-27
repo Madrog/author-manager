@@ -8,7 +8,7 @@ from api.utils.database import db
 book_routes = Blueprint("book_routes", __name__)
 
 @book_routes.route('/', methods=['POST'])
-@jwt_required
+@jwt_required()
 def create_book():
     try:
         json_data = request.get_json()
@@ -52,6 +52,7 @@ def get_book_detail(id):
 
 
 @book_routes.route('/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_book_detail(id):
     data = request.get_json()
     get_book = Book.query.get_or_404(id)
@@ -65,6 +66,7 @@ def update_book_detail(id):
 
 
 @book_routes.route('/<int:id>', methods=['PATCH'])
+@jwt_required()
 def modify_book_detail(id):
     data = request.get_json()
     get_book = Book.query.get_or_404(id)
@@ -80,6 +82,7 @@ def modify_book_detail(id):
 
 
 @book_routes.route('/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_book(id):
     get_book = Book.query.get_or_404(id)
     db.session.delete(get_book)
