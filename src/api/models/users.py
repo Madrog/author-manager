@@ -1,13 +1,14 @@
 from api.utils.database import db
 from passlib.hash import pbkdf2_sha256 as sha256
-from marshmallow import Schema, fields
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique = True, nullable = False)
-    password = db.Column(db.String(120), nullable = False)
-
+    username = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    isVerified = db.Column(db.Boolean, nullable=False, default=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
 
     def create(self):
         db.session.add(self)
@@ -16,7 +17,11 @@ class User(db.Model):
 
     @classmethod
     def find_by_username(cls, username):
-        return cls.query.filter_by(username = username).first()
+        return cls.query.filter_by(username=username).first()
+
+    @classmethod
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @staticmethod
     def generate_hash(password):
@@ -27,12 +32,11 @@ class User(db.Model):
         return sha256.verify(password, hash)
 
 
-class UserSchema(Schema):
-    class Meta(Schema.Meta):
+class UserSchema(SQLAlchemyAutoSchema):
+    class Meta:
         model = User
-        sqla_session = db.session
 
-    id = fields.Number(dump_only=True)
-    username = fields.String(required=True)
-    password = fields.String(required=True)
-    
+    id = auto_field(dump_only=True)
+    username = auto_field(required=True)
+    password = auto_field(required=True)
+    email = auto_field(required=True)

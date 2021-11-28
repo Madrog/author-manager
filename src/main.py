@@ -3,6 +3,7 @@ import os
 import sys
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
+from flask_marshmallow import Marshmallow
 from api.config.config import ProductionConfig, TestingConfig, DevelopmentConfig
 from api.utils.database import db
 from api.utils.responses import response_with
@@ -22,7 +23,7 @@ else:
 
 app.config.from_object(app_config)
 
-
+ma = Marshmallow(app)
 jwt = JWTManager(app)
 
 db.init_app(app)

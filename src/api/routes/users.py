@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+from api.utils.token import generate_verification_token, confirm_verification_token
 from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.users import User, UserSchema
@@ -27,9 +28,14 @@ def create_user():
 def authenticate_user():
     try:
         data = request.get_json()
-        current_user = User.find_by_username(data['username'])
+        if data.get('email'):
+            current_user = User.find_by_email(data['email'])
+        elif data.get('username'):
+            current_user = User.find_by_username(data['username'])
         if not current_user:
             return response_with(resp.SERVER_ERROR_404)
+        if current_user and not current_user.isVerified:
+            return response_with(resp.BAD_REQUEST_400)
         if User.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity = data['username'])
             return response_with(resp.SUCCESS_201, value={'message': 'Logged in {}'.format(current_user.username), 
