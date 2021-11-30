@@ -1,6 +1,7 @@
-from flask import Blueprint
-from flask import request
+import os
+from flask import Blueprint, request, url_for, current_app
 from flask_jwt_extended import jwt_required
+from werkzeug.utils import secure_filename
 from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.authors import Author, AuthorSchema
@@ -88,5 +89,29 @@ def delete_author(id):
     db.session.commit()
     return response_with(resp.SUCCESS_204)
 
+
+allowed_extensions = set(['image/jpeg', 'image/png', 'jpeg'])
+
+def allowed_file(filename): 
+    return filetype in allowed_extensions
+
+@author_routes.route('/avatar/<int:author_id>', methods=['POST'])
+@jwt_required
+def upsert_author_avatar(author_id):
+    try:
+        file = request.files['avatar']
+        get_author = Author.query.get_or_404(author_id)
+        if file and allowed_file(file.content_type):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            get_author.avatar = url_for('uploaded_file', filename=filename, _external=True)
+            db.session.add(get_author)
+            db.session.commit()
+            author_schema = AuthorSchema()
+            author = author_schema.dump(get_author)
+            return response_with(resp.SUCCESS_200, value={"author": author})
+    except Exception as e:
+        print(e)
+        return response_with(resp.INVALID_INPUT_422)
 
 

@@ -3,8 +3,9 @@ import os
 import sys
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-from flask_marshmallow import Marshmallow
+from werkzeug.utils import send_from_directory
 from api.config.config import ProductionConfig, TestingConfig, DevelopmentConfig
+from api.utils.email import mail
 from api.utils.database import db
 from api.utils.responses import response_with
 from api.routes.authors import author_routes
@@ -23,8 +24,6 @@ else:
 
 app.config.from_object(app_config)
 
-ma = Marshmallow(app)
-jwt = JWTManager(app)
 
 db.init_app(app)
 with app.app_context():
@@ -33,6 +32,11 @@ with app.app_context():
 app.register_blueprint(author_routes, url_prefix='/api/authors')
 app.register_blueprint(book_routes, url_prefix='/api/books') 
 app.register_blueprint(user_routes, url_prefix='/api/users')
+
+
+@app.route('/avatar/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 # START GLOBAL HTTP CONFIGURATIONS
@@ -61,8 +65,9 @@ def not_found(e):
 # END GLOBAL HTTP CONFIGURATIONS
 
 
-
+jwt = JWTManager(app)
 db.init_app(app)
+mail.init_app(app)
 with app.app_context():
     db.create_all()
 

@@ -1,8 +1,16 @@
+import os
 class Config(object):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    
+    MAIL_DEFAULT_SENDER= 'your_email_address'
+    MAIL_SERVER= 'email_providers_smtp_address'
+    MAIL_PORT= '<mail_server_port>'
+    MAIL_USERNAME= os.environ.get('EMAIL_ADDR')   # 'your_email_address'
+    MAIL_PASSWORD= os.environ.get('EMAIL_PASS')   # 'your_email_password'
+    MAIL_USE_TLS= False
+    MAIL_USE_SSL= True
+    UPLOAD_FOLDER= 'images'
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost:3306/prod_author_manager' #  <Production DB URL>
@@ -15,7 +23,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = False
     SECRET_KEY = '2415fc81fc6e2efa72e9ac96f0103028'
     SECURITY_PASSWORD_SALT = '6c22a001d37733eb92449581b0bb3771'
-
+    
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost:3306/test_author_manager' # <Testing DB URL>

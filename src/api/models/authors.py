@@ -1,7 +1,6 @@
 from api.utils.database import db
-from marshmallow import Schema, fields
 from api.models.books import BookSchema
-
+from marshmallow import Schema, fields
 class Author(db.Model):
     __tablename__= 'authors'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -9,6 +8,8 @@ class Author(db.Model):
     last_name = db.Column(db.String(20))
     created = db.Column(db.DateTime, server_default=db.func.now())
     books = db.relationship('Book', backref='Author', cascade="all, delete-orphan")
+    avatar = db.Column(db.String(20), nullable=True)
+
 
     def __init__(self, first_name, last_name, books=[]):
         self.first_name = first_name
@@ -31,3 +32,4 @@ class AuthorSchema(Schema):
     last_name = fields.String(required=True)
     created = fields.String(dump_only=True)
     books = fields.Nested(BookSchema, many=True, only=['title', 'year', 'id'])
+    avatar = fields.String(dump_only=True)
