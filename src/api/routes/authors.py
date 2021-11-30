@@ -92,7 +92,7 @@ def delete_author(id):
 
 allowed_extensions = set(['image/jpeg', 'image/png', 'jpeg'])
 
-def allowed_file(filename): 
+def allowed_file(filetype):
     return filetype in allowed_extensions
 
 @author_routes.route('/avatar/<int:author_id>', methods=['POST'])

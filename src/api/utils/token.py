@@ -3,7 +3,7 @@ from flask import config, current_app
 
 
 def generate_verification_token(email):
-    serializer = URLSafeTimedSerializer(current_app, config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
 

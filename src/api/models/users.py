@@ -1,6 +1,6 @@
 from api.utils.database import db
 from passlib.hash import pbkdf2_sha256 as sha256
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from marshmallow import Schema, fields
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -32,11 +32,12 @@ class User(db.Model):
         return sha256.verify(password, hash)
 
 
-class UserSchema(SQLAlchemyAutoSchema):
+class UserSchema(Schema):
     class Meta:
         model = User
+        sqla_session = db.session
 
-    id = auto_field(dump_only=True)
-    username = auto_field(required=True)
-    password = auto_field(required=True)
-    email = auto_field(required=True)
+    id = fields.Integer(dump_only=True)
+    username = fields.String(required=True)
+    password = fields.String(required=True)
+    email = fields.String(required=True)
