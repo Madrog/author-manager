@@ -15,8 +15,7 @@ user_routes = Blueprint('user_routes', __name__)
 def create_user():
     try:
         json_data = request.get_json()
-        if(User.find_by_email(json_data['email']) is not None or 
-        User.find_by_username(json_data['username']) is not None):
+        if(User.find_by_email(json_data['email']) is not None or User.find_by_username(json_data['username']) is not None):
             return response_with(resp.INVALID_INPUT_422)
         json_data['password'] = User.generate_hash(json_data['password'])
         user_schema = UserSchema()
