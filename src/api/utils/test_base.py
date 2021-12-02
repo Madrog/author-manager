@@ -1,8 +1,10 @@
 import unittest2 as unittest
+import tempfile
 from main import create_app
 from api.utils.database import db
 from api.config.config import TestingConfig
-import tempfile
+from sqlalchemy.orm.session import close_all_sessions
+
 
 class BaseTestCase(unittest.TestCase):
     """A base test case"""
@@ -17,5 +19,5 @@ class BaseTestCase(unittest.TestCase):
 
 
     def tearDown(self):
-        db.session.close_all()
+        close_all_sessions() # db.session.close_all()
         db.drop_all()

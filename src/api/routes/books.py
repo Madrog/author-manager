@@ -11,21 +11,14 @@ book_routes = Blueprint("book_routes", __name__)
 @jwt_required()
 def create_book():
     try:
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, 400
-        
+        json_data = request.get_json()       
         # Validate and deserialize input
         book_schema = BookSchema()
-        try:
-            data = book_schema.load(json_data)
-        except Exception as e:
-            print(e)
-            return {"message": "validation error occurred."}, 400
-        
+        data = book_schema.load(json_data)
+
         title = data['title']
-        year = int(data['year']) if data.get('year') else None
-        author_id = int(data['author_id']) if data.get('author_id') else None
+        year = int(data['year']) 
+        author_id = int(data['author_id'])
         
         book = Book(title=title, year=year, author_id=author_id)
         result = book_schema.dump(book.create())

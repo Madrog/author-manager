@@ -18,12 +18,7 @@ def create_author():
             return {"message": "No input data provided"}, 400
         # Validate and deserialize input
         author_schema = AuthorSchema()
-        try:
-            data = author_schema.load(json_data)
-        except Exception as e:
-            print(e)
-            return {"message": "validation error occurred."}, 400
-        
+        data = author_schema.load(json_data) 
         first_name = data["first_name"]
         last_name = data["last_name"]
         books = data["books"] if data.get("books") else []
@@ -96,7 +91,7 @@ def allowed_file(filetype):
     return filetype in allowed_extensions
 
 @author_routes.route('/avatar/<int:author_id>', methods=['POST'])
-@jwt_required
+@jwt_required()
 def upsert_author_avatar(author_id):
     try:
         file = request.files['avatar']

@@ -46,9 +46,10 @@ def authenticate_user():
         if current_user and not current_user.isVerified:
             return response_with(resp.BAD_REQUEST_400)
         if User.verify_hash(data['password'], current_user.password):
-            access_token = create_access_token(identity = data['username'])
-            return response_with(resp.SUCCESS_201, value={'message': 'Logged in {}'.format(current_user.username), 
-                                    "access_token": access_token})
+            access_token = create_access_token(identity = current_user.username)
+            return response_with(resp.SUCCESS_200, 
+                                value={'message': 'Logged in {}'.format(current_user.username), 
+                                "access_token": access_token})
         else:
             return response_with(resp.UNAUTHORIZED_401)
     except Exception as e:
@@ -60,7 +61,8 @@ def authenticate_user():
 def verify_email(token):
     try:
         email = confirm_verification_token(token)
-    except:
+    except Exception as e:
+        print(e)
         return response_with(resp.SERVER_ERROR_404)
     user = User.query.filter_by(email=email).first_or_404()
     if user.isVerified:

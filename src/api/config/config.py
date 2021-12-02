@@ -43,9 +43,9 @@ class TestingConfig(Config):
     JWT_SECRET_KEY = 'dab49619ff2cfc5622de9d8d82eb8d24'
     SECRET_KEY = '5a382f1bd6656f68e61f7d18131316b2'
     SECURITY_PASSWORD_SALT = '989321b0d9cfaff57011e308f250ad93'
-    MAIL_DEFAULT_SENDER= 'rogers.madda@gmail.com' # 'your_email_address'
-    MAIL_SERVER= 'smtp.googlemail.com' # 'email_providers_smtp_address'
-    MAIL_PORT= 587 # '<mail_server_port>'
+    MAIL_DEFAULT_SENDER= os.environ.get('EMAIL_ADDR')  # 'your_email_address'
+    MAIL_SERVER= 'smtp.gmail.com' # 'email_providers_smtp_address'
+    MAIL_PORT= 465 # '<mail_server_port>'
     MAIL_USERNAME= os.environ.get('EMAIL_ADDR')   # 'your_email_address'
     MAIL_PASSWORD= os.environ.get('EMAIL_PASS')   # 'your_email_password'
     MAIL_USE_TLS= False
