@@ -38,7 +38,7 @@ class DevelopmentConfig(Config):
     
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost:3306/test_author_manager' # <Testing DB URL>
+    SQLALCHEMY_DATABASE_URI = '' # <Testing DB URL>
     SQLALCHEMY_ECHO = False
     JWT_SECRET_KEY = 'dab49619ff2cfc5622de9d8d82eb8d24'
     SECRET_KEY = '5a382f1bd6656f68e61f7d18131316b2'
